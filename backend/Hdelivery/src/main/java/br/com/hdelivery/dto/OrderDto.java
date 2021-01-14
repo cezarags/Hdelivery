@@ -1,7 +1,10 @@
-package br.com.hdelivery.service.dto;
+package br.com.hdelivery.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import br.com.hdelivery.model.Order;
 import br.com.hdelivery.model.OrderStatus;
@@ -10,6 +13,8 @@ public class OrderDto  implements Serializable{
 	
 	
 	private static final long serialVersionUID = 1L;
+	
+	
 	private Long id;
 	private String address;
 	private Double latitude;
@@ -17,9 +22,30 @@ public class OrderDto  implements Serializable{
 	private Instant moment;
 	private OrderStatus status;
 	
+	private List<ProductDto> products = new ArrayList<>();
+	
 	public OrderDto() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+	
+	
+
+	public OrderDto(Long id, String address, Double latitude, Double longitude, Instant moment, OrderStatus status) {
+
+		this.id = id;
+		this.address = address;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.moment = moment;
+		this.status = status;
+		
+	}
+
+
+
+
 
 	public OrderDto(Order order) {
 		
@@ -28,7 +54,9 @@ public class OrderDto  implements Serializable{
 		this.latitude =  order.getLatitude();
 		this.longitude = order.getLongitude();
 		this.moment = order.getMoment();
-		this.status = OrderStatus.PENDING;
+		this.status = order.getStatus();
+		products = order.getProducts().stream()
+				.map(x -> new ProductDto(x)).collect(Collectors.toList());
 	}
 
 	public Long getId() {
@@ -78,7 +106,11 @@ public class OrderDto  implements Serializable{
 	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
-	
+
+	public List<ProductDto> getProducts() {
+		return products;
+	}
+	 
 	
 	
 
