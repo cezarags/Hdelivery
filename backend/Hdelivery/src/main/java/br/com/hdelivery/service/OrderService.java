@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.hdelivery.model.Order;
@@ -35,7 +36,7 @@ public class OrderService {
 		return lista.stream().map(x -> new OrderDto(x)).collect(Collectors.toList());
 	}
 	
-	@PostMapping
+	
 	@Transactional
 	public OrderDto insert (OrderDto orderDto){
 		Order order = new Order(null, orderDto.getAddress(), orderDto.getLatitude(), orderDto.getLongitude(), Instant.now(), OrderStatus.PENDING );
@@ -48,4 +49,21 @@ public class OrderService {
 		return new OrderDto(order);
 		
 	}
+	
+	
+	@Transactional
+	public OrderDto setDelivery(Long id) {
+		Order order = orderRepository.getOne(id);
+		order.setStatus(OrderStatus.DELIVERED);
+		order = orderRepository.save(order); 
+		
+		return new  OrderDto(order);
+		   
+	}
+	
+	
+	
+	  
+	 
+	
 }
